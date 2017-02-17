@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: bf0caf266ab3cc94ca64e15b495f160a
+timeCreated: 1487300120
+licenseType: Free
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences:
+  - chariotRed: {instanceID: 0}
+  - horseRed: {instanceID: 0}
+  - elephantRed: {instanceID: 0}
+  - advisorRed: {instanceID: 0}
+  - generalRed: {instanceID: 0}
+  - cannonRed: {instanceID: 0}
+  - soldierRed: {instanceID: 0}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
