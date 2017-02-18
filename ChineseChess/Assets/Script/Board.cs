@@ -26,6 +26,7 @@ public class Board : MonoBehaviour {
 	private float mouseOverX;
 	private float mouseOverY;
 	private Vector3 mousePosition;
+	private int printCounter = 0;
 
 	private void Start()
 	{
@@ -35,13 +36,18 @@ public class Board : MonoBehaviour {
 	private void Update()
 	{
 		UpdateMouseOver();
-		//Debug.Log(mousePosition);
+		if(printCounter==10){
+			Debug.Log(mousePosition);
+			printCounter = 0;
+		}else{
+			printCounter ++;
+		}
 	}
 
 	private void UpdateMouseOver()
 	{
 		//If it's my turn
-		if(!Camera.main //Check if camera exists
+		if(!Camera.main) //Check if camera exists
 		{
 			Debug.Log("Unable to find main camera.");
 			return;
