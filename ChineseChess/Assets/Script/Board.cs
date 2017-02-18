@@ -23,10 +23,47 @@ public class Board : MonoBehaviour {
 	public GameObject cannonBlue;
 	public GameObject soldierBlue;
 
+	private float mouseOverX;
+	private float mouseOverY;
+	private Vector3 mousePosition;
 
 	private void Start()
 	{
 		GenerateBoard();
+	}
+
+	private void Update()
+	{
+		UpdateMouseOver();
+		//Debug.Log(mousePosition);
+	}
+
+	private void UpdateMouseOver()
+	{
+		//If it's my turn
+		if(!Camera.main //Check if camera exists
+		{
+			Debug.Log("Unable to find main camera.");
+			return;
+		}
+
+		mouseOverX = (Input.mousePosition.x);
+        mouseOverY = (Input.mousePosition.y);
+        mousePosition = Camera.main.ScreenToWorldPoint(new Vector3 (mouseOverX,mouseOverY,94.3f));
+		/*
+		RaycastHit hit;
+		Debug.Log(Input.mousePosition);
+		if(Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 25.0f, LayerMask.GetMask("Board")))
+		{
+			mouseOver.x = (int) hit.point.x;
+			mouseOver.y = (int) hit.point.z;
+		}else{
+			Debug.Log(hit.point.x);
+			Debug.Log(hit.point.z);
+			mouseOver.x = -1;
+			mouseOver.y = -1;
+		}
+		*/
 	}
 
 	private void GenerateBoard()
