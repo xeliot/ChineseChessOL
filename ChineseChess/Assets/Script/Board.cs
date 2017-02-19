@@ -32,6 +32,8 @@ public class Board : MonoBehaviour {
 	private ChessPiece selectedPiece;
 	private Vector2 startDrag;
 	private Vector2 endDrag;
+	private bool dragging = false;
+	private Vector3 originalPosition;
 
 	private void Start()
 	{
@@ -41,18 +43,28 @@ public class Board : MonoBehaviour {
 	private void Update()
 	{
 		UpdateMouseOver();
-		
+		//Debug.Log(boardPosition);
 		//Id it is my turn
+		
 		int x = (int) boardPosition.x;
 		int y = (int) boardPosition.y;
+		
+		if(dragging){
+			DragPiece(selectedPiece);
+		}
+		
 
 		if(Input.GetMouseButtonDown(0)){
 			SelectPiece(x, y);
+			dragging = true;
+			originalPosition = selectedPiece.transform.position;
 		}
 		
 		if(Input.GetMouseButtonUp(0)){
 			TryMove((int) startDrag.x, (int) startDrag.y, x, y);
+			dragging = false;
 		}
+		
 	}
 
 	private void UpdateMouseOver()
@@ -65,25 +77,35 @@ public class Board : MonoBehaviour {
 
 		mouseOverX = (Input.mousePosition.x);
         mouseOverY = (Input.mousePosition.y);
-        mousePosition = Camera.main.ScreenToWorldPoint(new Vector3 (mouseOverX,mouseOverY,173.0f));
+        mousePosition = Camera.main.ScreenToWorldPoint(new Vector3 (mouseOverX,mouseOverY,186.75f));
 		boardPosition = GetBoardPosition(mousePosition.x, mousePosition.y);
 	}
 
 	private void SelectPiece(int x, int y)
 	{
-		Debug.Log(x+","+y);
+		//Debug.Log(x+","+y);
 		//Check for Out of Bounds
 		if(x < 0 || x > 9 || y < 0 || y > 8){
 			return;
 		}
 
 		ChessPiece p = pieces[x, y];
-		//p.transform.position = p.transform.position + new Vector3(0, 0, 300);
+		//Debug.Log(p.name);
+		//p.transform.position = mousePosition;
 
 		if(p != null){
 			selectedPiece = p;
 			startDrag = boardPosition;
 			//Debug.Log(selectedPiece.name);
+		}
+	}
+
+	private void DragPiece(ChessPiece sP)
+	{
+		if(sP.GetComponent<ChessPiece>().GetType()=="horse"){
+			sP.transform.position = Camera.main.ScreenToWorldPoint(new Vector3 (mouseOverX,mouseOverY,172.45f));
+		}else{
+			sP.transform.position = Camera.main.ScreenToWorldPoint(new Vector3 (mouseOverX,mouseOverY,177.75f));
 		}
 	}
 
@@ -95,7 +117,7 @@ public class Board : MonoBehaviour {
 		
 		//Debug.Log("("+startX+","+startY+") -> ("+endX+","+endY+")");
 		//Debug.Log(selectedPiece.name);
-
+		selectedPiece.transform.position = originalPosition;
 		MovePiece(selectedPiece, endX, endY);
 
 		// Check if out of Bounds
@@ -115,26 +137,15 @@ public class Board : MonoBehaviour {
 		//Debug.Log(startX+","+startY);
 		int xDifference = x - startX;
 		int yDifference = y - startY;
-		piece.transform.position = piece.transform.position + new Vector3(yDifference * 12.1f, xDifference * 9.6f, 0.0f);
+		piece.transform.position = piece.transform.position + new Vector3(yDifference * 20f, xDifference * 20f, 0.0f);
+		pieces[startX, startY] = null;
 		piece.SetBoardPosition(x, y);
 		pieces[x, y] = piece;
-		pieces[startX, startY] = null;
 	}
 
 	private Vector2 GetBoardPosition(float x, float y){
-		int yResult = (int) Math.Round((x+50.0)/12.5);
-		int xResult;
-		if(y<0){
-			xResult = (int) Math.Round((y+50)/10.0);
-			if(xResult==5){
-				xResult = 4;
-			}
-		}else{
-			xResult = (int) Math.Round((y+40)/10.0);
-			if(xResult==4){
-				xResult = 5;
-			}
-		}
+		int yResult = (int) Math.Round((x+80.0)/20.0);
+		int xResult = (int) Math.Round((y+90.0)/20.0);
 		Vector2 boardPos = new Vector2(xResult, yResult);
 		return boardPos;
 	}
@@ -170,25 +181,25 @@ public class Board : MonoBehaviour {
 		GenerateChariot(9, 0, -80f, 90f, 9.0f, true);
 		GenerateChariot(9, 8, 80f, 90f, 9.0f, true);
 
-		GenerateHorse(0, 1, -61.56f, 90f, 14.3f, true);
-		GenerateHorse(0, 7, 56.7f, 90f, 14.3f, true);
+		GenerateHorse(9, 1, -61.56f, 90f, 14.3f, true);
+		GenerateHorse(9, 7, 56.7f, 90f, 14.3f, true);
 
-		GenerateElephant(0, 2, -40f, 90f, 9.0f, true);
-		GenerateElephant(0, 6, 40f, 90f, 9.0f, true);
+		GenerateElephant(9, 2, -40f, 90f, 9.0f, true);
+		GenerateElephant(9, 6, 40f, 90f, 9.0f, true);
 
-		GenerateAdvisor(0, 3, -20f, 90f, 9.0f, true);
-		GenerateAdvisor(0, 5, 20f, 90f, 9.0f, true);
+		GenerateAdvisor(9, 3, -20f, 90f, 9.0f, true);
+		GenerateAdvisor(9, 5, 20f, 90f, 9.0f, true);
 
 		GenerateGeneral(9, 4, 0f, 90f, 9.0f, true);
 
-		GenerateCannon(2, 1, -59.14f, 50f, 9.0f, true);
-		GenerateCannon(2, 7, 58.96f, 50f, 9.0f, true);
+		GenerateCannon(7, 1, -59.14f, 50f, 9.0f, true);
+		GenerateCannon(7, 7, 58.96f, 50f, 9.0f, true);
 
-		GenerateSoldier(3, 0, -80f, 30f, 9.0f, true);
-		GenerateSoldier(3, 2, -40f, 30f, 9.0f, true);
-		GenerateSoldier(3, 4, 0f, 30f, 9.0f, true);
-		GenerateSoldier(3, 6, 40f, 30f, 9.0f, true);
-		GenerateSoldier(3, 8, 80f, 30f, 9.0f, true);
+		GenerateSoldier(6, 0, -80f, 30f, 9.0f, true);
+		GenerateSoldier(6, 2, -40f, 30f, 9.0f, true);
+		GenerateSoldier(6, 4, 0f, 30f, 9.0f, true);
+		GenerateSoldier(6, 6, 40f, 30f, 9.0f, true);
+		GenerateSoldier(6, 8, 80f, 30f, 9.0f, true);
 	}
 
 	private void GenerateChariot(int x, int y, float px, float py, float pz, bool red)
