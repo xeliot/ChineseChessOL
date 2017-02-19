@@ -1,7 +1,7 @@
 # ChineseChessOL
 Online player vs player version of Chinese Chess built with Unity 3D.  
 
-![Logo](/ChineseChess/Assets/Graphics/Screenshot.PNG)
+![Logo](/ChineseChess/Misc/Screenshot2.PNG)
   
   
 ##Quick Start For Developers  
