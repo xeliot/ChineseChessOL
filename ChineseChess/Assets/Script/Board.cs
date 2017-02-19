@@ -143,40 +143,52 @@ public class Board : MonoBehaviour {
 	{
 
 		//Generate Blue Team
-		GenerateChariot(0, 8, 47f, -47f, 9.0f, false);
-		GenerateChariot(0, 0, -46.14f, -47.04f, 9.0f, false);
-		GenerateHorse(0, 7, 35.79f, -47.1f, 14.3f, false);
-		GenerateHorse(0, 1, -35.37f, -47.1f, 14.3f, false);
-		GenerateElephant(0, 6, 23.78f, -47.1f, 9.0f, false);
-		GenerateElephant(0, 2, -23.78f, -47.1f, 9.0f, false);
-		GenerateAdvisor(0, 5, 11.9f, -47.79f, 9.0f, false);
-		GenerateAdvisor(0, 3, -11.9f, -47.79f, 9.0f, false);
-		GenerateGeneral(0, 4, 0f, -46.95f, 9.0f, false);
-		GenerateCannon(2, 7, 34.8f, -28.5f, 9.0f, false);
-		GenerateCannon(2, 1, -35.9f, -28.5f, 9.0f, false);
-		GenerateSoldier(3, 0, -46.5f, -19.1f, 9.0f, false);
-		GenerateSoldier(3, 2, -23.5f, -19.1f, 9.0f, false);
-		GenerateSoldier(3, 4, 0f, -19.1f, 9.0f, false);
-		GenerateSoldier(3, 6, 23.5f, -19.1f, 9.0f, false);
-		GenerateSoldier(3, 8, 46.5f, -19.1f, 9.0f, false);
+		GenerateChariot(0, 0, -80f, -90f, 9.0f, false);
+		GenerateChariot(0, 8, 80f, -90f, 9.0f, false);
+
+		GenerateHorse(0, 1, -56.7f, -90f, 14.3f, false);
+		GenerateHorse(0, 7, 61.56f, -90f, 14.3f, false);
+
+		GenerateElephant(0, 2, -40f, -90f, 9.0f, false);
+		GenerateElephant(0, 6, 40f, -90f, 9.0f, false);
+
+		GenerateAdvisor(0, 3, -20f, -90f, 9.0f, false);
+		GenerateAdvisor(0, 5, 20f, -90f, 9.0f, false);
+
+		GenerateGeneral(0, 4, 0f, -90f, 9.0f, false);
+
+		GenerateCannon(2, 1, -58.96f, -50f, 9.0f, false);
+		GenerateCannon(2, 7, 59.14f, -50f, 9.0f, false);
+
+		GenerateSoldier(3, 0, -80f, -30f, 9.0f, false);
+		GenerateSoldier(3, 2, -40f, -30f, 9.0f, false);
+		GenerateSoldier(3, 4, 0f, -30f, 9.0f, false);
+		GenerateSoldier(3, 6, 40f, -30f, 9.0f, false);
+		GenerateSoldier(3, 8, 80f, -30f, 9.0f, false);
 
 		//Generate Red Team
-		GenerateChariot(9, 8, 46.14f, 46.04f, 9.0f, true);
-		GenerateChariot(9, 0, -46.14f, 46.04f, 9.0f, true);
-		GenerateHorse(9, 7, 33.79f, 45.82f, 14.3f, true);
-		GenerateHorse(9, 1, -37.37f, 45.82f, 14.3f, true);
-		GenerateElephant(9, 6, 23.78f, 44.61f, 9.0f, true);
-		GenerateElephant(9, 2, -23.78f, 44.61f, 9.0f, true);
-		GenerateAdvisor(9, 5, 11.9f, 46.79f, 9.0f, true);
-		GenerateAdvisor(9, 3, -11.9f, 46.79f, 9.0f, true);
-		GenerateGeneral(9, 4, 0f, 45.95f, 9.0f, true);
-		GenerateCannon(7, 7, 34.8f, 26.5f, 9.0f, true);
-		GenerateCannon(7, 1, -35.9f, 26.5f, 9.0f, true);
-		GenerateSoldier(6, 0, -46.5f, 18.1f, 9.0f, true);
-		GenerateSoldier(6, 2, -23.5f, 18.1f, 9.0f, true);
-		GenerateSoldier(6, 4, 0f, 18.1f, 9.0f, true);
-		GenerateSoldier(6, 6, 23.5f, 18.1f, 9.0f, true);
-		GenerateSoldier(6, 8, 46.5f, 18.1f, 9.0f, true);
+		GenerateChariot(9, 0, -80f, 90f, 9.0f, true);
+		GenerateChariot(9, 8, 80f, 90f, 9.0f, true);
+
+		GenerateHorse(0, 1, -61.56f, 90f, 14.3f, true);
+		GenerateHorse(0, 7, 56.7f, 90f, 14.3f, true);
+
+		GenerateElephant(0, 2, -40f, 90f, 9.0f, true);
+		GenerateElephant(0, 6, 40f, 90f, 9.0f, true);
+
+		GenerateAdvisor(0, 3, -20f, 90f, 9.0f, true);
+		GenerateAdvisor(0, 5, 20f, 90f, 9.0f, true);
+
+		GenerateGeneral(9, 4, 0f, 90f, 9.0f, true);
+
+		GenerateCannon(2, 1, -59.14f, 50f, 9.0f, true);
+		GenerateCannon(2, 7, 58.96f, 50f, 9.0f, true);
+
+		GenerateSoldier(3, 0, -80f, 30f, 9.0f, true);
+		GenerateSoldier(3, 2, -40f, 30f, 9.0f, true);
+		GenerateSoldier(3, 4, 0f, 30f, 9.0f, true);
+		GenerateSoldier(3, 6, 40f, 30f, 9.0f, true);
+		GenerateSoldier(3, 8, 80f, 30f, 9.0f, true);
 	}
 
 	private void GenerateChariot(int x, int y, float px, float py, float pz, bool red)
