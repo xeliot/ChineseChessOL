@@ -209,12 +209,14 @@ public class Board : MonoBehaviour {
 
 	private bool isValidMove(int startX, int startY, int endX, int endY, string type){
 		//Debug.Log("("+startX+", "+startY+") --> ("+endX+", "+endY+")");
+		//cannot eat the same color
 		if(pieces[endX, endY]!=null){
 			if(pieces[startX, startY].GetRed() ==pieces[endX, endY].GetRed()){
 				return false;
 			}
 		}
 		ArrayList possibleMoves = new ArrayList();
+		bool isRed = pieces[startX, startY].GetRed();
 		if(type=="chariot"){
 			if(startX!=endX && startY!=endY)return false;
 			if(startX==endX && startY==endY)return false;
@@ -271,10 +273,77 @@ public class Board : MonoBehaviour {
 				}
 			}
 		}else if(type=="elephant"){
-			possibleMoves.Add(new Vector2(startX+2, startY+2));
-			possibleMoves.Add(new Vector2(startX+2, startY-2));
-			possibleMoves.Add(new Vector2(startX-2, startY+2));
-			possibleMoves.Add(new Vector2(startX-2, startY-2));
+			if(isInBounds(startX+1, startY+1)){
+				if(pieces[startX+1, startY+1] == null){
+					if(!isRed){
+						if(startX+2 <= 4){
+							possibleMoves.Add(new Vector2(startX+2, startY+2));
+						}
+					}else{
+						possibleMoves.Add(new Vector2(startX+2, startY+2));
+					}
+				}
+			}
+			if(isInBounds(startX+1, startY-1)){
+				if(pieces[startX+1, startY-1] == null){
+					if(!isRed){
+						if(startX+2 <= 4){
+							possibleMoves.Add(new Vector2(startX+2, startY-2));
+						}
+					}else{
+						possibleMoves.Add(new Vector2(startX+2, startY-2));
+					}
+				}
+			}
+			if(isInBounds(startX-1, startY+1)){
+				if(pieces[startX-1, startY+1]==null){
+					if(isRed){
+						if(startX-2 >= 5){
+							possibleMoves.Add(new Vector2(startX-2, startY+2));
+						}
+					}else{
+						possibleMoves.Add(new Vector2(startX-2, startY+2));
+					}
+				}
+			}
+			if(isInBounds(startX-1, startY-1)){
+				if(pieces[startX-1, startY-1]==null){
+					if(isRed){
+						if(startX-2 >= 5){
+							possibleMoves.Add(new Vector2(startX-2, startY-2));
+						}
+					}else{
+						possibleMoves.Add(new Vector2(startX-2, startY-2));
+					}
+				}
+			}
+		}else if(type=="advisor"){
+			ArrayList advisorBox = new ArrayList();
+			if(isRed){
+				advisorBox.Add(new Vector2(7, 3));
+				advisorBox.Add(new Vector2(7, 5));
+				advisorBox.Add(new Vector2(8, 4));
+				advisorBox.Add(new Vector2(9, 3));
+				advisorBox.Add(new Vector2(9, 5));
+			}else{
+				advisorBox.Add(new Vector2(0, 3));
+				advisorBox.Add(new Vector2(0, 5));
+				advisorBox.Add(new Vector2(1, 4));
+				advisorBox.Add(new Vector2(2, 3));
+				advisorBox.Add(new Vector2(2, 5));
+			}
+			possibleMoves.Add(new Vector2(startX+1, startY+1));
+			possibleMoves.Add(new Vector2(startX+1, startY-1));
+			possibleMoves.Add(new Vector2(startX-1, startY+1));
+			possibleMoves.Add(new Vector2(startX-1, startY-1));
+			foreach (Vector2 pos in possibleMoves){
+				if(pos.x == endX && pos.y == endY && advisorBox.Contains(pos)){
+					if(isInBounds(endX, endY)){
+						return true;
+					}
+				}
+			}
+			return false;
 		}
 		foreach (Vector2 pos in possibleMoves){
 			if(pos.x == endX && pos.y == endY){
