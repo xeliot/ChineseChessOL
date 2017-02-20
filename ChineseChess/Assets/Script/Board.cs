@@ -209,6 +209,12 @@ public class Board : MonoBehaviour {
 
 	private bool isValidMove(int startX, int startY, int endX, int endY, string type){
 		//Debug.Log("("+startX+", "+startY+") --> ("+endX+", "+endY+")");
+		if(pieces[endX, endY]!=null){
+			if(pieces[startX, startY].GetRed() ==pieces[endX, endY].GetRed()){
+				return false;
+			}
+		}
+		ArrayList possibleMoves = new ArrayList();
 		if(type=="chariot"){
 			if(startX!=endX && startY!=endY)return false;
 			if(startX==endX && startY==endY)return false;
@@ -240,7 +246,6 @@ public class Board : MonoBehaviour {
 				return true;
 			}			
 		}else if(type=="horse"){
-			ArrayList possibleMoves = new ArrayList();
 			if(isInBounds(startX+1, startY)){
 				if(pieces[startX+1, startY]==null){
 					possibleMoves.Add(new Vector2(startX+2, startY-1));
@@ -265,14 +270,18 @@ public class Board : MonoBehaviour {
 					possibleMoves.Add(new Vector2(startX-1, startY+2));
 				}
 			}
-			foreach (Vector2 pos in possibleMoves){
-				if(pos.x == endX && pos.y == endY){
-					if(isInBounds(endX, endY)){
-						return true;
-					}
+		}else if(type=="elephant"){
+			possibleMoves.Add(new Vector2(startX+2, startY+2));
+			possibleMoves.Add(new Vector2(startX+2, startY-2));
+			possibleMoves.Add(new Vector2(startX-2, startY+2));
+			possibleMoves.Add(new Vector2(startX-2, startY-2));
+		}
+		foreach (Vector2 pos in possibleMoves){
+			if(pos.x == endX && pos.y == endY){
+				if(isInBounds(endX, endY)){
+					return true;
 				}
 			}
-			return false;
 		}
 		return false;
 	}
