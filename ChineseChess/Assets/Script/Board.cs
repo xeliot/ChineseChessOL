@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using System;
 
 public class Board : MonoBehaviour {
@@ -49,21 +47,26 @@ public class Board : MonoBehaviour {
 		int x = (int) boardPosition.x;
 		int y = (int) boardPosition.y;
 		
-		if(dragging){
+
+		if(dragging && selectedPiece != null){
 			DragPiece(selectedPiece);
 		}
 		
 
 		if(Input.GetMouseButtonDown(0)){
 			SelectPiece(x, y);
-			dragging = true;
-			originalPosition = selectedPiece.transform.position;
+			if(selectedPiece != null){
+				dragging = true;
+				originalPosition = selectedPiece.transform.position;
+			}
 		}
 		
 		if(Input.GetMouseButtonUp(0)){
-			TryMove((int) startDrag.x, (int) startDrag.y, x, y);
-			dragging = false;
-			selectedPiece = null;
+			if(selectedPiece != null){
+				TryMove((int) startDrag.x, (int) startDrag.y, x, y);
+				dragging = false;
+				selectedPiece = null;
+			}
 		}
 		
 	}
@@ -103,7 +106,7 @@ public class Board : MonoBehaviour {
 
 	private void DragPiece(ChessPiece sP)
 	{
-		if(sP.GetComponent<ChessPiece>().GetType()=="horse"){
+		if(sP.GetComponent<ChessPiece>().Type=="horse"){
 			sP.transform.position = Camera.main.ScreenToWorldPoint(new Vector3 (mouseOverX,mouseOverY,172.45f));
 		}else{
 			sP.transform.position = Camera.main.ScreenToWorldPoint(new Vector3 (mouseOverX,mouseOverY,177.75f));
@@ -112,6 +115,7 @@ public class Board : MonoBehaviour {
 
 	private void TryMove(int startX, int startY, int endX, int endY)
 	{
+		//Debug.Log(selectedPiece.name);
 		startDrag = new Vector2(startX, startY);
 		endDrag = new Vector2(endX, endY);
 		selectedPiece = pieces[startX, startY];
@@ -119,12 +123,11 @@ public class Board : MonoBehaviour {
 		//Debug.Log("("+startX+","+startY+") -> ("+endX+","+endY+")");
 		//Debug.Log(selectedPiece.name);
 		selectedPiece.transform.position = originalPosition;
-		MovePiece(selectedPiece, endX, endY);
-
-		// Check if out of Bounds
-
-		// Is there a selected pieces
-
+		if(endX >= 0 && endX < 10 && endY >= 0 && endY < 9 && selectedPiece != null){
+			if(isValidMove(startX, startY, endX, endY, selectedPiece.Type)){
+				MovePiece(selectedPiece, endX, endY);
+			}
+		}
 
 	}
 
@@ -203,18 +206,53 @@ public class Board : MonoBehaviour {
 		GenerateSoldier(6, 8, 80f, 30f, 9.0f, true);
 	}
 
+	private bool isValidMove(int startX, int startY, int endX, int endY, string type){
+		//Debug.Log("("+startX+", "+startY+") --> ("+endX+", "+endY+")");
+		if(type=="chariot"){
+			if(startX!=endX && startY!=endY)return false;
+			if(startX==endX && startY==endY)return false;
+			int start;
+			int end;
+			if(startY!=endY){
+				if(endY>startY){
+					start = startY;
+					end = endY;
+				}else{
+					start = endY;
+					end = startY;
+				}
+				for(int i=start+1; i<end; i++){
+					if(pieces[startX, i] != null)return false;
+				}
+				return true;
+			}else if(startX!=endX){
+				if(endX>startX){
+					start = startX;
+					end = endX;
+				}else{
+					start = endX;
+					end = startX;
+				}
+				for(int i=start+1; i<end; i++){
+					if(pieces[i, startY] != null)return false;
+				}
+				return true;
+			}			
+		}
+		return false;
+	}
 	private void GenerateChariot(int x, int y, float px, float py, float pz, bool red)
 	{
 		GameObject go;
 		if(red){
 			go = Instantiate(chariotRed) as GameObject;
 			go.AddComponent<ChessPiece>();
-			go.GetComponent<ChessPiece>().SetType("chariot");
+			go.GetComponent<ChessPiece>().Type = "chariot";
 			go.GetComponent<ChessPiece>().SetRed(true);
 		}else{
 			go = Instantiate(chariotBlue) as GameObject;
 			go.AddComponent<ChessPiece>();
-			go.GetComponent<ChessPiece>().SetType("chariot");
+			go.GetComponent<ChessPiece>().Type = "chariot";
 			go.GetComponent<ChessPiece>().SetRed(false);
 		}
 		go.GetComponent<ChessPiece>().SetBoardPosition(x, y);
@@ -228,12 +266,12 @@ public class Board : MonoBehaviour {
 		if(red){
 			go = Instantiate(horseRed) as GameObject;
 			go.AddComponent<ChessPiece>();
-			go.GetComponent<ChessPiece>().SetType("horse");
+			go.GetComponent<ChessPiece>().Type = "horse";
 			go.GetComponent<ChessPiece>().SetRed(true);
 		}else{
 			go = Instantiate(horseBlue) as GameObject;
 			go.AddComponent<ChessPiece>();
-			go.GetComponent<ChessPiece>().SetType("horse");
+			go.GetComponent<ChessPiece>().Type = "horse";
 			go.GetComponent<ChessPiece>().SetRed(false);
 		}
 		go.GetComponent<ChessPiece>().SetBoardPosition(x, y);
@@ -247,12 +285,12 @@ public class Board : MonoBehaviour {
 		if(red){
 			go = Instantiate(elephantRed) as GameObject;
 			go.AddComponent<ChessPiece>();
-			go.GetComponent<ChessPiece>().SetType("elephant");
+			go.GetComponent<ChessPiece>().Type = "elephant";
 			go.GetComponent<ChessPiece>().SetRed(true);
 		}else{
 			go = Instantiate(elephantBlue) as GameObject;
 			go.AddComponent<ChessPiece>();
-			go.GetComponent<ChessPiece>().SetType("elephant");
+			go.GetComponent<ChessPiece>().Type = "elephant";
 			go.GetComponent<ChessPiece>().SetRed(false);
 		}
 		go.GetComponent<ChessPiece>().SetBoardPosition(x, y);
@@ -266,12 +304,12 @@ public class Board : MonoBehaviour {
 		if(red){
 			go = Instantiate(advisorRed) as GameObject;
 			go.AddComponent<ChessPiece>();
-			go.GetComponent<ChessPiece>().SetType("advisor");
+			go.GetComponent<ChessPiece>().Type = "advisor";
 			go.GetComponent<ChessPiece>().SetRed(true);
 		}else{
 			go = Instantiate(advisorBlue) as GameObject;
 			go.AddComponent<ChessPiece>();
-			go.GetComponent<ChessPiece>().SetType("advisor");
+			go.GetComponent<ChessPiece>().Type = "advisor";
 			go.GetComponent<ChessPiece>().SetRed(false);
 		}
 		go.GetComponent<ChessPiece>().SetBoardPosition(x, y);
@@ -285,12 +323,12 @@ public class Board : MonoBehaviour {
 		if(red){
 			go = Instantiate(generalRed) as GameObject;
 			go.AddComponent<ChessPiece>();
-			go.GetComponent<ChessPiece>().SetType("general");
+			go.GetComponent<ChessPiece>().Type = "general";
 			go.GetComponent<ChessPiece>().SetRed(true);
 		}else{
 			go = Instantiate(generalBlue) as GameObject;
 			go.AddComponent<ChessPiece>();
-			go.GetComponent<ChessPiece>().SetType("general");
+			go.GetComponent<ChessPiece>().Type = "general";
 			go.GetComponent<ChessPiece>().SetRed(false);
 		}
 		go.GetComponent<ChessPiece>().SetBoardPosition(x, y);
@@ -304,12 +342,12 @@ public class Board : MonoBehaviour {
 		if(red){
 			go = Instantiate(cannonRed) as GameObject;
 			go.AddComponent<ChessPiece>();
-			go.GetComponent<ChessPiece>().SetType("cannon");
+			go.GetComponent<ChessPiece>().Type = "cannon";
 			go.GetComponent<ChessPiece>().SetRed(true);
 		}else{
 			go = Instantiate(cannonBlue) as GameObject;
 			go.AddComponent<ChessPiece>();
-			go.GetComponent<ChessPiece>().SetType("cannon");
+			go.GetComponent<ChessPiece>().Type = "cannon";
 			go.GetComponent<ChessPiece>().SetRed(false);
 		}
 		go.GetComponent<ChessPiece>().SetBoardPosition(x, y);
@@ -323,12 +361,12 @@ public class Board : MonoBehaviour {
 		if(red){
 			go = Instantiate(soldierRed) as GameObject;
 			go.AddComponent<ChessPiece>();
-			go.GetComponent<ChessPiece>().SetType("soldier");
+			go.GetComponent<ChessPiece>().Type = "soldier";
 			go.GetComponent<ChessPiece>().SetRed(true);
 		}else{
 			go = Instantiate(soldierBlue) as GameObject;
 			go.AddComponent<ChessPiece>();
-			go.GetComponent<ChessPiece>().SetType("soldier");
+			go.GetComponent<ChessPiece>().Type = "soldier";
 			go.GetComponent<ChessPiece>().SetRed(false);
 		}
 		go.GetComponent<ChessPiece>().SetBoardPosition(x, y);

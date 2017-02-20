@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class ChessPiece : MonoBehaviour {
 
@@ -19,17 +17,22 @@ public class ChessPiece : MonoBehaviour {
 		type = "";
 		red = true;
 		boardPosition = new Vector2(-1, -1);
-	}	
-
-	public void SetType(string t){
-		type = t;
 	}
 
-	public string GetType(){
-		return type;
-	}
+    public string Type
+    {
+        get
+        {
+            return type;
+        }
 
-	public void SetRed(bool r){
+        set
+        {
+            type = value;
+        }
+    }
+
+    public void SetRed(bool r){
 		red = r;
 	}
 
