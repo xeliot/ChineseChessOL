@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System;
+using System.Collections;
 
 public class Board : MonoBehaviour {
 
@@ -238,9 +239,52 @@ public class Board : MonoBehaviour {
 				}
 				return true;
 			}			
+		}else if(type=="horse"){
+			ArrayList possibleMoves = new ArrayList();
+			if(isInBounds(startX+1, startY)){
+				if(pieces[startX+1, startY]==null){
+					possibleMoves.Add(new Vector2(startX+2, startY-1));
+					possibleMoves.Add(new Vector2(startX+2, startY+1));
+				}
+			}
+			if(isInBounds(startX-1, startY)){
+				if(pieces[startX-1, startY]==null){
+					possibleMoves.Add(new Vector2(startX-2, startY-1));
+					possibleMoves.Add(new Vector2(startX-2, startY+1));
+				}
+			}
+			if(isInBounds(startX, startY-1)){
+				if(pieces[startX, startY-1]==null){
+					possibleMoves.Add(new Vector2(startX+1, startY-2));
+					possibleMoves.Add(new Vector2(startX-1, startY-2));
+				}
+			}
+			if(isInBounds(startX, startY+1)){
+				if(pieces[startX, startY+1]==null){
+					possibleMoves.Add(new Vector2(startX+1, startY+2));
+					possibleMoves.Add(new Vector2(startX-1, startY+2));
+				}
+			}
+			foreach (Vector2 pos in possibleMoves){
+				if(pos.x == endX && pos.y == endY){
+					if(isInBounds(endX, endY)){
+						return true;
+					}
+				}
+			}
+			return false;
 		}
 		return false;
 	}
+
+	private bool isInBounds(int x, int y){
+		if(x >= 0 && x < 10 && y >= 0 && y < 9){
+			return true;
+		}else{
+			return false;
+		}
+	}
+	
 	private void GenerateChariot(int x, int y, float px, float py, float pz, bool red)
 	{
 		GameObject go;
