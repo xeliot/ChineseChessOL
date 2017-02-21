@@ -344,6 +344,13 @@ public class Board : MonoBehaviour {
 				}
 			}
 			return false;
+		}else if(type=="general"){
+			ArrayList generalBox = new ArrayList();
+			if(isRed){
+				// add cross for general on redside
+			}else{
+				// add cross for general on blueside
+			}
 		}
 		foreach (Vector2 pos in possibleMoves){
 			if(pos.x == endX && pos.y == endY){
