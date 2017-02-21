@@ -408,6 +408,19 @@ public class Board : MonoBehaviour {
 				}
 				return true;
 			}
+		}else if(type=="soldier"){
+			bool crossedRiver = false;
+			if(isRed){
+				possibleMoves.Add(new Vector2(startX-1, startY));
+				if(startX<=4){crossedRiver=true;}
+			}else{
+				possibleMoves.Add(new Vector2(startX+1, startY));
+				if(startX>=5){crossedRiver=true;}
+			}
+			if(crossedRiver){
+				possibleMoves.Add(new Vector2(startX, startY-1));
+				possibleMoves.Add(new Vector2(startX, startY+1));
+			}
 		}
 		foreach (Vector2 pos in possibleMoves){
 			if(pos.x == endX && pos.y == endY){
