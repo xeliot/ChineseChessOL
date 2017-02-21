@@ -347,9 +347,66 @@ public class Board : MonoBehaviour {
 		}else if(type=="general"){
 			ArrayList generalBox = new ArrayList();
 			if(isRed){
-				// add cross for general on redside
+				generalBox.Add(new Vector2(7, 4));
+				generalBox.Add(new Vector2(8, 3));
+				generalBox.Add(new Vector2(8, 4));
+				generalBox.Add(new Vector2(8, 5));
+				generalBox.Add(new Vector2(9, 4));
 			}else{
-				// add cross for general on blueside
+				generalBox.Add(new Vector2(2, 4));
+				generalBox.Add(new Vector2(1, 3));
+				generalBox.Add(new Vector2(1, 4));
+				generalBox.Add(new Vector2(1, 5));
+				generalBox.Add(new Vector2(0, 4));
+			}
+			possibleMoves.Add(new Vector2(startX+1, startY));
+			possibleMoves.Add(new Vector2(startX-1, startY));
+			possibleMoves.Add(new Vector2(startX, startY+1));
+			possibleMoves.Add(new Vector2(startX, startY-1));
+			foreach (Vector2 pos in possibleMoves){
+				if(pos.x == endX && pos.y == endY && generalBox.Contains(pos)){
+					if(isInBounds(endX, endY)){
+						return true;
+					}
+				}
+			}
+			return false;
+		}else if(type=="cannon"){
+			if(startX!=endX && startY!=endY){return false;} //cannot move diagonally
+			if(startX==endX && startY==endY){return false;} //cannot move to the same current place.
+			int start;
+			int end;
+			if(pieces[endX, endY]!=null){
+				if(pieces[endX, endY].GetRed() == pieces[startX, startY].GetRed()){return false;}
+				else{
+					int countBetween = 0;
+					if(startX!=endX){
+						if(startX<endX){start=startX; end=endX;}else{start=endX; end=startX;}
+						for(int i=start+1; i<end; i++){
+							if(pieces[i, startY] != null)countBetween++;
+						}
+					}else if(startY!=endY){
+						if(startY<endY){start=startY; end=endY;}else{start=endY; end=startY;}
+						for(int i=start+1; i<end; i++){
+							if(pieces[startX, i] != null)countBetween++;
+						}
+					}
+					Debug.Log(countBetween);
+					return countBetween==1;
+				}
+			}else{
+				if(startX!=endX){
+					if(startX<endX){start=startX; end=endX;}else{start=endX; end=startX;}
+					for(int i=start+1; i<end; i++){
+						if(pieces[i, startY] != null)return false;
+					}
+				}else if(startY!=endY){
+					if(startY<endY){start=startY; end=endY;}else{start=endY; end=startY;}
+					for(int i=start+1; i<end; i++){
+						if(pieces[startX, i] != null)return false;
+					}
+				}
+				return true;
 			}
 		}
 		foreach (Vector2 pos in possibleMoves){
