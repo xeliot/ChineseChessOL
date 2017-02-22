@@ -34,6 +34,8 @@ public class Board : MonoBehaviour {
 	private bool dragging = false;
 	private Vector3 originalPosition;
 
+	private bool isRedTurn = true;
+
 	private void Start()
 	{
 		GenerateBoard();
@@ -56,17 +58,18 @@ public class Board : MonoBehaviour {
 
 		if(Input.GetMouseButtonDown(0)){
 			SelectPiece(x, y);
-			if(selectedPiece != null){
+			if(selectedPiece != null && selectedPiece.GetRed()==isRedTurn){
 				dragging = true;
 				originalPosition = selectedPiece.transform.position;
 			}
 		}
 		
 		if(Input.GetMouseButtonUp(0)){
-			if(selectedPiece != null){
+			if(selectedPiece != null && selectedPiece.GetRed()==isRedTurn){
 				TryMove((int) startDrag.x, (int) startDrag.y, x, y);
 				dragging = false;
 				selectedPiece = null;
+				isRedTurn = ! isRedTurn;
 			}
 		}
 		
