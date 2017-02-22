@@ -39,7 +39,7 @@ public class Board : MonoBehaviour {
 
 	private Vector2 generalRedPos;
 	private Vector2 generalBluePos;
-	private Vector2 piecesPos;
+	private ArrayList piecesPos = new ArrayList();
 
 	private void Start()
 	{
