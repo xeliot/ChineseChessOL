@@ -143,6 +143,10 @@ public class Board : MonoBehaviour {
 		int xDifference = x - startX;
 		int yDifference = y - startY;
 		piece.transform.position = piece.transform.position + new Vector3(yDifference * 20f, xDifference * 20f, 0.0f);
+		if(pieces[x, y]!=null){
+			pieces[x, y].SetBoardPosition(-1, -1);
+			pieces[x, y].transform.position = pieces[x, y].transform.position + new Vector3(0f, 0f, 300f);
+		}
 		pieces[startX, startY] = null;
 		piece.SetBoardPosition(x, y);
 		pieces[x, y] = piece;
