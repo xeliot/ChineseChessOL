@@ -37,6 +37,10 @@ public class Board : MonoBehaviour {
 	private bool moveCompleted;
 	private bool isRedTurn = true;
 
+	private Vector2 generalRedPos;
+	private Vector2 generalBluePos;
+	private Vector2 piecesPos;
+
 	private void Start()
 	{
 		GenerateBoard();
@@ -131,13 +135,13 @@ public class Board : MonoBehaviour {
 		//Debug.Log(selectedPiece.name);
 		selectedPiece.transform.position = originalPosition;
 		if(endX >= 0 && endX < 10 && endY >= 0 && endY < 9 && selectedPiece != null){
-			if(!GeneralChecked(isRedTurn)){
+			//if(!GeneralChecked(isRedTurn)){
 				if(isValidMove(startX, startY, endX, endY, selectedPiece.Type)){
 					MovePiece(selectedPiece, endX, endY);
 					moveCompleted = true;
 					return;
 				}
-			}
+			//}
 		}
 		moveCompleted = false;
 
