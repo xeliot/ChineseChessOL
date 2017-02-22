@@ -34,6 +34,7 @@ public class Board : MonoBehaviour {
 	private bool dragging = false;
 	private Vector3 originalPosition;
 
+	private bool moveCompleted;
 	private bool isRedTurn = true;
 
 	private void Start()
@@ -69,7 +70,9 @@ public class Board : MonoBehaviour {
 				TryMove((int) startDrag.x, (int) startDrag.y, x, y);
 				dragging = false;
 				selectedPiece = null;
-				isRedTurn = ! isRedTurn;
+				if(moveCompleted){
+					isRedTurn = ! isRedTurn;
+				}
 			}
 		}
 		
@@ -128,10 +131,15 @@ public class Board : MonoBehaviour {
 		//Debug.Log(selectedPiece.name);
 		selectedPiece.transform.position = originalPosition;
 		if(endX >= 0 && endX < 10 && endY >= 0 && endY < 9 && selectedPiece != null){
-			if(isValidMove(startX, startY, endX, endY, selectedPiece.Type)){
-				MovePiece(selectedPiece, endX, endY);
+			if(!GeneralChecked(isRedTurn)){
+				if(isValidMove(startX, startY, endX, endY, selectedPiece.Type)){
+					MovePiece(selectedPiece, endX, endY);
+					moveCompleted = true;
+					return;
+				}
 			}
 		}
+		moveCompleted = false;
 
 	}
 
@@ -212,6 +220,34 @@ public class Board : MonoBehaviour {
 		GenerateSoldier(6, 4, 0f, 30f, 9.0f, true);
 		GenerateSoldier(6, 6, 40f, 30f, 9.0f, true);
 		GenerateSoldier(6, 8, 80f, 30f, 9.0f, true);
+	}
+
+	private bool GeneralChecked(bool isRed){
+		int generalX = -1;
+		int generalY = -1;
+		for(int i=0; i<10; i++){
+			for(int j=0; j<9; j++){
+				if(pieces[i, j]!=null){
+					Debug.Log(pieces[i, j].Type);
+					if(pieces[i, j].Type=="general" && pieces[i, j].GetRed()==isRed){
+						generalX = i;
+						generalY = j;
+					}
+				}
+			}
+		}
+		//Debug.Log(generalX+", "+generalY);
+		for(int i=0; i<10; i++){
+			for(int j=0; j<9; j++){
+				if(pieces[i, j]!=null){
+					ChessPiece p = pieces[i, j];
+					if(p.GetRed()!=isRed && isValidMove(i, j, generalX, generalY, p.Type)){
+						return true;
+					}
+				}
+			}
+		}
+		return false;
 	}
 
 	private bool isValidMove(int startX, int startY, int endX, int endY, string type){
