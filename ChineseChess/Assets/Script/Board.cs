@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 
 public class Board : MonoBehaviour {
 
@@ -39,7 +40,8 @@ public class Board : MonoBehaviour {
 
 	private Vector2 generalRedPos;
 	private Vector2 generalBluePos;
-	private ArrayList piecesPos = new ArrayList();
+	private List<Vector2> redPiecesPos = new List<Vector2>();
+	private List<Vector2> bluePiecesPos = new List<Vector2>();
 
 	private void Start()
 	{
@@ -133,15 +135,77 @@ public class Board : MonoBehaviour {
 		
 		//Debug.Log("("+startX+","+startY+") -> ("+endX+","+endY+")");
 		//Debug.Log(selectedPiece.name);
+		//Debug.Log(isRedTurn);
 		selectedPiece.transform.position = originalPosition;
 		if(endX >= 0 && endX < 10 && endY >= 0 && endY < 9 && selectedPiece != null){
-			//if(!GeneralChecked(isRedTurn)){
-				if(isValidMove(startX, startY, endX, endY, selectedPiece.Type)){
+			if(isValidMove(startX, startY, endX, endY, selectedPiece.Type)){
+				//Debug.Log(GeneralChecked(isRedTurn));
+				if(!GeneralChecked(isRedTurn)){
 					MovePiece(selectedPiece, endX, endY);
 					moveCompleted = true;
 					return;
+				}else{
+					Debug.Log("general is checked.");
+					ChessPiece[,] copyBoard = (ChessPiece[,]) pieces.Clone();
+					Vector2 originalgeneralRedPos = new Vector2(generalRedPos.x, generalRedPos.y);
+					Vector2 originalgeneralBluePos = new Vector2(generalBluePos.x, generalBluePos.y);
+					if(!isRedTurn){
+						for(int i= 0; i<bluePiecesPos.Count; i++){
+							if(bluePiecesPos[i].x == generalBluePos.x && bluePiecesPos[i].y == generalBluePos.y){
+								generalBluePos = new Vector2(bluePiecesPos[i].x, bluePiecesPos[i].y);
+							}
+							if(bluePiecesPos[i].x == startX && bluePiecesPos[i].y == startY){
+								bluePiecesPos[i] = new Vector2(endX, endY);
+								pieces[endX, endY] = selectedPiece;
+								pieces[startX, startY] = null;
+							}
+						}
+					}else{
+						for(int i= 0; i<redPiecesPos.Count; i++){
+							if(redPiecesPos[i].x == generalRedPos.x && redPiecesPos[i].y == generalRedPos.y){
+								generalRedPos = new Vector2(redPiecesPos[i].x, redPiecesPos[i].y);
+							}
+							if(redPiecesPos[i].x == startX && redPiecesPos[i].y == startY){
+								redPiecesPos[i] = new Vector2(endX, endY);
+								pieces[endX, endY] = selectedPiece;
+								pieces[startX, startY] = null;
+							}
+						}
+					}
+					for(int i=0; i < bluePiecesPos.Count; i++){
+						Debug.Log(bluePiecesPos[i]);
+					}
+					bool isGeneralChecked = GeneralChecked(isRedTurn);
+					if(isRedTurn){
+						for(int i=0; i<redPiecesPos.Count; i++){
+							if(redPiecesPos[i].x == endX && redPiecesPos[i].y == endY){
+								redPiecesPos[i] = new Vector2(startX, startY);
+							}
+						}
+					}else{
+						for(int i=0; i<bluePiecesPos.Count; i++){
+							if(bluePiecesPos[i].x == endX && bluePiecesPos[i].y == endY){
+								bluePiecesPos[i] = new Vector2(startX, startY);
+							}
+						}
+					}
+					pieces = copyBoard;
+					if(isGeneralChecked){
+						moveCompleted = false;
+						Debug.Log("general still checked");
+						generalBluePos = originalgeneralBluePos;
+						generalRedPos = originalgeneralRedPos;
+						return;
+					}else{
+						Debug.Log("general not checked anymore.");
+						generalBluePos = originalgeneralBluePos;
+						generalRedPos = originalgeneralRedPos;
+						MovePiece(selectedPiece, endX, endY);
+						moveCompleted = true;
+						return;
+					}
 				}
-			//}
+			}
 		}
 		moveCompleted = false;
 
@@ -163,6 +227,26 @@ public class Board : MonoBehaviour {
 			pieces[x, y].transform.position = pieces[x, y].transform.position + new Vector3(0f, 0f, 300f);
 		}
 		pieces[startX, startY] = null;
+		if(piece.GetRed()){
+			for(int i=0; i<redPiecesPos.Count; i++){
+				if(piece.GetBoardPosition() == redPiecesPos[i]){
+					redPiecesPos[i] = new Vector2(x, y);
+				}
+			}
+		}else{
+			for(int i=0; i<bluePiecesPos.Count; i++){
+				if(piece.GetBoardPosition() == bluePiecesPos[i]){
+					bluePiecesPos[i] = new Vector2(x, y);
+				}
+			}
+		}
+		if(piece.Type == "general"){
+			if(piece.GetRed()){
+				generalRedPos = new Vector2(x, y);
+			}else{
+				generalBluePos = new Vector2(x, y);
+			}
+		}
 		piece.SetBoardPosition(x, y);
 		pieces[x, y] = piece;
 	}
@@ -181,19 +265,37 @@ public class Board : MonoBehaviour {
 		GenerateChariot(0, 0, -80f, -90f, 9.0f, false);
 		GenerateChariot(0, 8, 80f, -90f, 9.0f, false);
 
+		bluePiecesPos.Add(new Vector2(0, 0));
+		bluePiecesPos.Add(new Vector2(0, 8));
+
 		GenerateHorse(0, 1, -56.7f, -90f, 14.3f, false);
 		GenerateHorse(0, 7, 61.56f, -90f, 14.3f, false);
+
+		bluePiecesPos.Add(new Vector2(0, 1));
+		bluePiecesPos.Add(new Vector2(0, 7));
 
 		GenerateElephant(0, 2, -40f, -90f, 9.0f, false);
 		GenerateElephant(0, 6, 40f, -90f, 9.0f, false);
 
+		bluePiecesPos.Add(new Vector2(0, 2));
+		bluePiecesPos.Add(new Vector2(0, 6));
+
 		GenerateAdvisor(0, 3, -20f, -90f, 9.0f, false);
 		GenerateAdvisor(0, 5, 20f, -90f, 9.0f, false);
 
+		bluePiecesPos.Add(new Vector2(0, 3));
+		bluePiecesPos.Add(new Vector2(0, 5));
+
 		GenerateGeneral(0, 4, 0f, -90f, 9.0f, false);
+
+		bluePiecesPos.Add(new Vector2(0, 4));
+		generalBluePos = new Vector2(0, 4);
 
 		GenerateCannon(2, 1, -58.96f, -50f, 9.0f, false);
 		GenerateCannon(2, 7, 59.14f, -50f, 9.0f, false);
+
+		bluePiecesPos.Add(new Vector2(2, 1));
+		bluePiecesPos.Add(new Vector2(2, 7));
 
 		GenerateSoldier(3, 0, -80f, -30f, 9.0f, false);
 		GenerateSoldier(3, 2, -40f, -30f, 9.0f, false);
@@ -201,53 +303,76 @@ public class Board : MonoBehaviour {
 		GenerateSoldier(3, 6, 40f, -30f, 9.0f, false);
 		GenerateSoldier(3, 8, 80f, -30f, 9.0f, false);
 
+		bluePiecesPos.Add(new Vector2(3, 0));
+		bluePiecesPos.Add(new Vector2(3, 2));
+		bluePiecesPos.Add(new Vector2(3, 4));
+		bluePiecesPos.Add(new Vector2(3, 6));
+		bluePiecesPos.Add(new Vector2(3, 8));
+
+
 		//Generate Red Team
 		GenerateChariot(9, 0, -80f, 90f, 9.0f, true);
 		GenerateChariot(9, 8, 80f, 90f, 9.0f, true);
 
+		redPiecesPos.Add(new Vector2(9, 0));
+		redPiecesPos.Add(new Vector2(9, 8));
+
 		GenerateHorse(9, 1, -61.56f, 90f, 14.3f, true);
 		GenerateHorse(9, 7, 56.7f, 90f, 14.3f, true);
+
+		redPiecesPos.Add(new Vector2(9, 1));
+		redPiecesPos.Add(new Vector2(9, 7));
 
 		GenerateElephant(9, 2, -40f, 90f, 9.0f, true);
 		GenerateElephant(9, 6, 40f, 90f, 9.0f, true);
 
+		redPiecesPos.Add(new Vector2(9, 2));
+		redPiecesPos.Add(new Vector2(9, 6));
+
 		GenerateAdvisor(9, 3, -20f, 90f, 9.0f, true);
 		GenerateAdvisor(9, 5, 20f, 90f, 9.0f, true);
 
+		redPiecesPos.Add(new Vector2(9, 3));
+		redPiecesPos.Add(new Vector2(9, 5));
+
 		GenerateGeneral(9, 4, 0f, 90f, 9.0f, true);
+
+		redPiecesPos.Add(new Vector2(9, 4));
+		generalRedPos = new Vector2(9, 4);
 
 		GenerateCannon(7, 1, -59.14f, 50f, 9.0f, true);
 		GenerateCannon(7, 7, 58.96f, 50f, 9.0f, true);
+
+		redPiecesPos.Add(new Vector2(7, 1));
+		redPiecesPos.Add(new Vector2(7, 7));
 
 		GenerateSoldier(6, 0, -80f, 30f, 9.0f, true);
 		GenerateSoldier(6, 2, -40f, 30f, 9.0f, true);
 		GenerateSoldier(6, 4, 0f, 30f, 9.0f, true);
 		GenerateSoldier(6, 6, 40f, 30f, 9.0f, true);
 		GenerateSoldier(6, 8, 80f, 30f, 9.0f, true);
+
+		redPiecesPos.Add(new Vector2(6, 0));
+		redPiecesPos.Add(new Vector2(6, 2));
+		redPiecesPos.Add(new Vector2(6, 4));
+		redPiecesPos.Add(new Vector2(6, 6));
+		redPiecesPos.Add(new Vector2(6, 8));
 	}
 
 	private bool GeneralChecked(bool isRed){
-		int generalX = -1;
-		int generalY = -1;
-		for(int i=0; i<10; i++){
-			for(int j=0; j<9; j++){
-				if(pieces[i, j]!=null){
-					Debug.Log(pieces[i, j].Type);
-					if(pieces[i, j].Type=="general" && pieces[i, j].GetRed()==isRed){
-						generalX = i;
-						generalY = j;
-					}
+		if(isRed){
+			for(int i=0; i<bluePiecesPos.Count; i++){
+				Vector2 pos = bluePiecesPos[i];
+				if(isValidMove((int)pos.x, (int)pos.y, (int)generalRedPos.x, (int)generalRedPos.y, pieces[(int)pos.x, (int)pos.y].Type)){
+					return true;
 				}
 			}
-		}
-		//Debug.Log(generalX+", "+generalY);
-		for(int i=0; i<10; i++){
-			for(int j=0; j<9; j++){
-				if(pieces[i, j]!=null){
-					ChessPiece p = pieces[i, j];
-					if(p.GetRed()!=isRed && isValidMove(i, j, generalX, generalY, p.Type)){
-						return true;
-					}
+		}else{
+			if(pieces[1, 4]!=null)
+			for(int i=0; i<redPiecesPos.Count; i++){
+				Vector2 pos = redPiecesPos[i];
+				if(isValidMove((int)pos.x, (int)pos.y, (int)generalBluePos.x, (int)generalBluePos.y, pieces[(int)pos.x, (int)pos.y].Type)){
+					return true;
 				}
 			}
 		}
@@ -438,7 +563,6 @@ public class Board : MonoBehaviour {
 							if(pieces[startX, i] != null)countBetween++;
 						}
 					}
-					Debug.Log(countBetween);
 					return countBetween==1;
 				}
 			}else{
