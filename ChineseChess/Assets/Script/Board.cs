@@ -139,13 +139,13 @@ public class Board : MonoBehaviour {
 		selectedPiece.transform.position = originalPosition;
 		if(endX >= 0 && endX < 10 && endY >= 0 && endY < 9 && selectedPiece != null){
 			if(isValidMove(startX, startY, endX, endY, selectedPiece.Type)){
-				//Debug.Log(GeneralChecked(isRedTurn));
+				Debug.Log(GeneralChecked(isRedTurn));
 				if(!GeneralChecked(isRedTurn)){
 					MovePiece(selectedPiece, endX, endY);
 					moveCompleted = true;
 					return;
 				}else{
-					Debug.Log("general is checked.");
+					//Debug.Log("general is checked.");
 					ChessPiece[,] copyBoard = (ChessPiece[,]) pieces.Clone();
 					Vector2 originalgeneralRedPos = new Vector2(generalRedPos.x, generalRedPos.y);
 					Vector2 originalgeneralBluePos = new Vector2(generalBluePos.x, generalBluePos.y);
@@ -172,9 +172,9 @@ public class Board : MonoBehaviour {
 							}
 						}
 					}
-					for(int i=0; i < bluePiecesPos.Count; i++){
-						Debug.Log(bluePiecesPos[i]);
-					}
+					//for(int i=0; i < bluePiecesPos.Count; i++){
+						//Debug.Log(bluePiecesPos[i]);
+					//}
 					bool isGeneralChecked = GeneralChecked(isRedTurn);
 					if(isRedTurn){
 						for(int i=0; i<redPiecesPos.Count; i++){
@@ -223,6 +223,7 @@ public class Board : MonoBehaviour {
 		int yDifference = y - startY;
 		piece.transform.position = piece.transform.position + new Vector3(yDifference * 20f, xDifference * 20f, 0.0f);
 		if(pieces[x, y]!=null){
+			RemovePiece(pieces[x, y].GetRed(), x, y);
 			pieces[x, y].SetBoardPosition(-1, -1);
 			pieces[x, y].transform.position = pieces[x, y].transform.position + new Vector3(0f, 0f, 300f);
 		}
@@ -249,6 +250,25 @@ public class Board : MonoBehaviour {
 		}
 		piece.SetBoardPosition(x, y);
 		pieces[x, y] = piece;
+	}
+
+	private void RemovePiece(bool isRed, int x, int y){
+		int removePos=-1;
+		if(isRed){
+			for(int i=0; i < redPiecesPos.Count; i++){
+				if(redPiecesPos[i].x == x && redPiecesPos[i].y == y){
+					removePos = i;
+				}
+			}
+			redPiecesPos.RemoveAt(removePos);
+		}else{
+			for(int i=0; i < bluePiecesPos.Count; i++){
+				if(bluePiecesPos[i].x == x && bluePiecesPos[i].y == y){
+					removePos = i;
+				}
+			}
+			bluePiecesPos.RemoveAt(removePos);
+		}
 	}
 
 	private Vector2 GetBoardPosition(float x, float y){
@@ -368,9 +388,9 @@ public class Board : MonoBehaviour {
 				}
 			}
 		}else{
-			if(pieces[1, 4]!=null)
 			for(int i=0; i<redPiecesPos.Count; i++){
 				Vector2 pos = redPiecesPos[i];
+				//Debug.Log(pos);
 				if(isValidMove((int)pos.x, (int)pos.y, (int)generalBluePos.x, (int)generalBluePos.y, pieces[(int)pos.x, (int)pos.y].Type)){
 					return true;
 				}
