@@ -51,9 +51,7 @@ public class Board : MonoBehaviour {
 	private void Update()
 	{
 		UpdateMouseOver();
-		//Debug.Log(boardPosition);
-		//Id it is my turn
-		
+
 		int x = (int) boardPosition.x;
 		int y = (int) boardPosition.y;
 		
@@ -100,20 +98,15 @@ public class Board : MonoBehaviour {
 
 	private void SelectPiece(int x, int y)
 	{
-		//Debug.Log(x+","+y);
-		//Check for Out of Bounds
 		if(x < 0 || x > 9 || y < 0 || y > 8){
 			return;
 		}
 
 		ChessPiece p = pieces[x, y];
-		//Debug.Log(p.name);
-		//p.transform.position = mousePosition;
 
 		if(p != null){
 			selectedPiece = p;
 			startDrag = boardPosition;
-			//Debug.Log(selectedPiece.name);
 		}
 	}
 
@@ -134,7 +127,6 @@ public class Board : MonoBehaviour {
 		selectedPiece.transform.position = originalPosition;
 		if(endX >= 0 && endX < 10 && endY >= 0 && endY < 9 && selectedPiece != null){
 			if(isValidMove(startX, startY, endX, endY, selectedPiece.Type)){
-				Debug.Log(GeneralChecked(isRedTurn));
 				if(!GeneralChecked(isRedTurn)){
 					MovePiece(selectedPiece, endX, endY);
 					moveCompleted = true;
@@ -204,12 +196,10 @@ public class Board : MonoBehaviour {
 					pieces = copyBoard;
 					if(isGeneralChecked){
 						moveCompleted = false;
-						Debug.Log("general still checked");
 						generalBluePos = originalgeneralBluePos;
 						generalRedPos = originalgeneralRedPos;
 						return;
 					}else{
-						Debug.Log("general not checked anymore.");
 						generalBluePos = originalgeneralBluePos;
 						generalRedPos = originalgeneralRedPos;
 						MovePiece(selectedPiece, endX, endY);
@@ -227,10 +217,8 @@ public class Board : MonoBehaviour {
 		if(piece==null){
 			return;
 		}
-		//Debug.Log(piece.name);
 		int startX = (int) piece.GetBoardPosition().x;
 		int startY = (int) piece.GetBoardPosition().y;
-		//Debug.Log(startX+","+startY);
 		int xDifference = x - startX;
 		int yDifference = y - startY;
 		piece.transform.position = piece.transform.position + new Vector3(yDifference * 20f, xDifference * 20f, 0.0f);
@@ -402,7 +390,6 @@ public class Board : MonoBehaviour {
 		}else{
 			for(int i=0; i<redPiecesPos.Count; i++){
 				Vector2 pos = redPiecesPos[i];
-				//Debug.Log(pos);
 				if(isValidMove((int)pos.x, (int)pos.y, (int)generalBluePos.x, (int)generalBluePos.y, pieces[(int)pos.x, (int)pos.y].Type)){
 					return true;
 				}
@@ -412,8 +399,6 @@ public class Board : MonoBehaviour {
 	}
 
 	private bool isValidMove(int startX, int startY, int endX, int endY, string type){
-		//Debug.Log("("+startX+", "+startY+") --> ("+endX+", "+endY+")");
-		//cannot eat the same color
 		if(pieces[endX, endY]!=null){
 			if(pieces[startX, startY].GetRed() ==pieces[endX, endY].GetRed()){
 				return false;
