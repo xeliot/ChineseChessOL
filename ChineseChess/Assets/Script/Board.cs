@@ -128,14 +128,9 @@ public class Board : MonoBehaviour {
 
 	private void TryMove(int startX, int startY, int endX, int endY)
 	{
-		//Debug.Log(selectedPiece.name);
 		startDrag = new Vector2(startX, startY);
 		endDrag = new Vector2(endX, endY);
 		selectedPiece = pieces[startX, startY];
-		
-		//Debug.Log("("+startX+","+startY+") -> ("+endX+","+endY+")");
-		//Debug.Log(selectedPiece.name);
-		//Debug.Log(isRedTurn);
 		selectedPiece.transform.position = originalPosition;
 		if(endX >= 0 && endX < 10 && endY >= 0 && endY < 9 && selectedPiece != null){
 			if(isValidMove(startX, startY, endX, endY, selectedPiece.Type)){
@@ -145,10 +140,10 @@ public class Board : MonoBehaviour {
 					moveCompleted = true;
 					return;
 				}else{
-					//Debug.Log("general is checked.");
 					ChessPiece[,] copyBoard = (ChessPiece[,]) pieces.Clone();
 					Vector2 originalgeneralRedPos = new Vector2(generalRedPos.x, generalRedPos.y);
 					Vector2 originalgeneralBluePos = new Vector2(generalBluePos.x, generalBluePos.y);
+					Vector2 removePos = new Vector2(-1, -1);
 					if(!isRedTurn){
 						for(int i= 0; i<bluePiecesPos.Count; i++){
 							if(bluePiecesPos[i].x == generalBluePos.x && bluePiecesPos[i].y == generalBluePos.y){
@@ -172,9 +167,6 @@ public class Board : MonoBehaviour {
 							}
 						}
 					}
-					//for(int i=0; i < bluePiecesPos.Count; i++){
-						//Debug.Log(bluePiecesPos[i]);
-					//}
 					bool isGeneralChecked = GeneralChecked(isRedTurn);
 					if(isRedTurn){
 						for(int i=0; i<redPiecesPos.Count; i++){
@@ -539,17 +531,17 @@ public class Board : MonoBehaviour {
 		}else if(type=="general"){
 			ArrayList generalBox = new ArrayList();
 			if(isRed){
-				generalBox.Add(new Vector2(7, 4));
-				generalBox.Add(new Vector2(8, 3));
-				generalBox.Add(new Vector2(8, 4));
-				generalBox.Add(new Vector2(8, 5));
-				generalBox.Add(new Vector2(9, 4));
+				for(int i=7; i<10; i++){
+					for(int j=3; j<6; j++){
+						generalBox.Add(new Vector2(i, j));
+					}
+				}
 			}else{
-				generalBox.Add(new Vector2(2, 4));
-				generalBox.Add(new Vector2(1, 3));
-				generalBox.Add(new Vector2(1, 4));
-				generalBox.Add(new Vector2(1, 5));
-				generalBox.Add(new Vector2(0, 4));
+				for(int i=0; i<3; i++){
+					for(int j=3; j<6; j++){
+						generalBox.Add(new Vector2(i, j));
+					}
+				}
 			}
 			possibleMoves.Add(new Vector2(startX+1, startY));
 			possibleMoves.Add(new Vector2(startX-1, startY));
