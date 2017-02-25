@@ -1,7 +1,8 @@
 # ChineseChessOL
 Online player vs player version of Chinese Chess built with Unity 3D.  
+[Learn more about Chinese Chess / XiangQi](https://en.wikipedia.org/wiki/Xiangqi)
 
-![Logo](/ChineseChess/Misc/Screenshot2.PNG)
+<img src="/ChineseChess/Misc/Screenshot2.PNG" width="340">
   
   
 ##Quick Start For Developers  
