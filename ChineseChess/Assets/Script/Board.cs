@@ -144,12 +144,18 @@ public class Board : MonoBehaviour {
 					Vector2 originalgeneralRedPos = new Vector2(generalRedPos.x, generalRedPos.y);
 					Vector2 originalgeneralBluePos = new Vector2(generalBluePos.x, generalBluePos.y);
 					Vector2 removePos = new Vector2(-1, -1);
+					bool removePosIsRed = false;
 					if(!isRedTurn){
 						for(int i= 0; i<bluePiecesPos.Count; i++){
 							if(bluePiecesPos[i].x == generalBluePos.x && bluePiecesPos[i].y == generalBluePos.y){
 								generalBluePos = new Vector2(bluePiecesPos[i].x, bluePiecesPos[i].y);
 							}
 							if(bluePiecesPos[i].x == startX && bluePiecesPos[i].y == startY){
+								if(pieces[endX, endY] != null){
+									removePos = new Vector2(endX, endY);
+									removePosIsRed = pieces[endX, endY].GetRed();
+									RemovePiece(pieces[endX, endY].GetRed(), endX, endY);
+								}
 								bluePiecesPos[i] = new Vector2(endX, endY);
 								pieces[endX, endY] = selectedPiece;
 								pieces[startX, startY] = null;
@@ -161,6 +167,11 @@ public class Board : MonoBehaviour {
 								generalRedPos = new Vector2(redPiecesPos[i].x, redPiecesPos[i].y);
 							}
 							if(redPiecesPos[i].x == startX && redPiecesPos[i].y == startY){
+								if(pieces[endX, endY] != null){
+									removePos = new Vector2(endX, endY);
+									removePosIsRed = pieces[endX, endY].GetRed();
+									RemovePiece(pieces[endX, endY].GetRed(), endX, endY);
+								}
 								redPiecesPos[i] = new Vector2(endX, endY);
 								pieces[endX, endY] = selectedPiece;
 								pieces[startX, startY] = null;
@@ -168,6 +179,15 @@ public class Board : MonoBehaviour {
 						}
 					}
 					bool isGeneralChecked = GeneralChecked(isRedTurn);
+
+					if(removePos.x != -1 && removePos.y != -1){
+						if(removePosIsRed){
+							redPiecesPos.Add(removePos);
+						}else{
+							bluePiecesPos.Add(removePos);
+						}
+					}
+
 					if(isRedTurn){
 						for(int i=0; i<redPiecesPos.Count; i++){
 							if(redPiecesPos[i].x == endX && redPiecesPos[i].y == endY){
