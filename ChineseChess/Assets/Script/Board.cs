@@ -24,6 +24,10 @@ public class Board : MonoBehaviour {
 	public GameObject cannonBlue;
 	public GameObject soldierBlue;
 
+	public GameObject redCurvyArrow;
+	public GameObject blueCurvyArrow;
+
+
 	private float mouseOverX;
 	private float mouseOverY;
 	private Vector3 mousePosition;
@@ -46,6 +50,10 @@ public class Board : MonoBehaviour {
 	private void Start()
 	{
 		GenerateBoard();
+		redCurvyArrow = Instantiate(redCurvyArrow);
+		blueCurvyArrow = Instantiate(blueCurvyArrow);
+		redCurvyArrow.transform.position = new Vector3(-139.9f, 81, 10f);
+		blueCurvyArrow.transform.position = new Vector3(-139.9f, -81f, 300f);
 	}
 
 	private void Update()
@@ -76,6 +84,13 @@ public class Board : MonoBehaviour {
 				selectedPiece = null;
 				if(moveCompleted){
 					isRedTurn = ! isRedTurn;
+					if(isRedTurn){
+						redCurvyArrow.transform.position = new Vector3(-139.9f, 81, 10f);
+						blueCurvyArrow.transform.position = new Vector3(-139.9f, -81f, 300f);
+					}else{
+						redCurvyArrow.transform.position = new Vector3(-139.9f, 81, 300f);
+						blueCurvyArrow.transform.position = new Vector3(-139.9f, -81f, 10f);
+					}
 				}
 			}
 		}
