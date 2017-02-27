@@ -26,6 +26,7 @@ public class Board : MonoBehaviour {
 
 	public GameObject redCurvyArrow;
 	public GameObject blueCurvyArrow;
+	float arrowStep = 1;
 
 
 	private float mouseOverX;
@@ -62,13 +63,27 @@ public class Board : MonoBehaviour {
 
 		int x = (int) boardPosition.x;
 		int y = (int) boardPosition.y;
-		
+
+		if(isRedTurn){
+			if(redCurvyArrow.transform.position.x < -140){
+				arrowStep = 1;
+			}else if(redCurvyArrow.transform.position.x > -130){
+				arrowStep = -1;
+			}
+			redCurvyArrow.transform.position = new Vector3(redCurvyArrow.transform.position.x + arrowStep, 81f, 10f);
+		}else{
+			if(blueCurvyArrow.transform.position.x < -140){
+				arrowStep = 1;
+			}else if(blueCurvyArrow.transform.position.x > -130){
+				arrowStep = -1;
+			}
+			blueCurvyArrow.transform.position = new Vector3(blueCurvyArrow.transform.position.x + arrowStep, -81f, 10f);			
+		}
 
 		if(dragging && selectedPiece != null){
 			DragPiece(selectedPiece);
 		}
 		
-
 		if(Input.GetMouseButtonDown(0)){
 			SelectPiece(x, y);
 			if(selectedPiece != null && selectedPiece.GetRed()==isRedTurn){
