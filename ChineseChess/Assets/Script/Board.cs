@@ -28,6 +28,8 @@ public class Board : MonoBehaviour {
 	public GameObject blueCurvyArrow;
 	float arrowStep = 1;
 
+	public GameObject GeneralCheckedText;
+	public float alpha;
 
 	private float mouseOverX;
 	private float mouseOverY;
@@ -51,6 +53,8 @@ public class Board : MonoBehaviour {
 	private void Start()
 	{
 		GenerateBoard();
+		GeneralCheckedText = Instantiate(GeneralCheckedText);
+		GeneralCheckedText.GetComponent<TextMesh>().color = new Color(0f, 0f, 0f, 0f);
 		redCurvyArrow = Instantiate(redCurvyArrow);
 		blueCurvyArrow = Instantiate(blueCurvyArrow);
 		redCurvyArrow.transform.position = new Vector3(-139.9f, 81, 10f);
@@ -63,6 +67,11 @@ public class Board : MonoBehaviour {
 
 		int x = (int) boardPosition.x;
 		int y = (int) boardPosition.y;
+
+		if(alpha>0){
+			alpha -= 0.01f;
+			GeneralCheckedText.GetComponent<TextMesh>().color = new Color(0f, 0f, 0f, alpha);
+		}
 
 		if(isRedTurn){
 			if(redCurvyArrow.transform.position.x < -140){
@@ -225,6 +234,8 @@ public class Board : MonoBehaviour {
 					}
 					pieces = copyBoard;
 					if(isGeneralChecked){
+						alpha = 1;
+						GeneralCheckedText.GetComponent<TextMesh>().color = new Color(0f, 0f, 0f, alpha);
 						moveCompleted = false;
 						generalBluePos = originalgeneralBluePos;
 						generalRedPos = originalgeneralRedPos;
