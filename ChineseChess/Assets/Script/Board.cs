@@ -29,7 +29,9 @@ public class Board : MonoBehaviour {
 	float arrowStep = 1;
 
 	public GameObject GeneralCheckedText;
-	public float alpha;
+	public GameObject invalidMoveText;
+	public float invalidAlpha;
+	public float generalAlpha;
 
 	private float mouseOverX;
 	private float mouseOverY;
@@ -55,6 +57,8 @@ public class Board : MonoBehaviour {
 		GenerateBoard();
 		GeneralCheckedText = Instantiate(GeneralCheckedText);
 		GeneralCheckedText.GetComponent<TextMesh>().color = new Color(0f, 0f, 0f, 0f);
+		invalidMoveText = Instantiate(invalidMoveText);
+		invalidMoveText.GetComponent<TextMesh>().color = new Color(0f, 0f, 0f, 0f);
 		redCurvyArrow = Instantiate(redCurvyArrow);
 		blueCurvyArrow = Instantiate(blueCurvyArrow);
 		redCurvyArrow.transform.position = new Vector3(-139.9f, 81, 10f);
@@ -68,9 +72,13 @@ public class Board : MonoBehaviour {
 		int x = (int) boardPosition.x;
 		int y = (int) boardPosition.y;
 
-		if(alpha>0){
-			alpha -= 0.01f;
-			GeneralCheckedText.GetComponent<TextMesh>().color = new Color(0f, 0f, 0f, alpha);
+		if(generalAlpha>0){
+			generalAlpha -= 0.01f;
+			GeneralCheckedText.GetComponent<TextMesh>().color = new Color(0f, 0f, 0f, generalAlpha);
+		}
+		if(invalidAlpha>0){
+			invalidAlpha -= 0.01f;
+			invalidMoveText.GetComponent<TextMesh>().color = new Color(0f, 0f, 0f, invalidAlpha);
 		}
 
 		if(isRedTurn){
@@ -234,8 +242,8 @@ public class Board : MonoBehaviour {
 					}
 					pieces = copyBoard;
 					if(isGeneralChecked){
-						alpha = 1;
-						GeneralCheckedText.GetComponent<TextMesh>().color = new Color(0f, 0f, 0f, alpha);
+						generalAlpha = 1;
+						GeneralCheckedText.GetComponent<TextMesh>().color = new Color(0f, 0f, 0f, generalAlpha);
 						moveCompleted = false;
 						generalBluePos = originalgeneralBluePos;
 						generalRedPos = originalgeneralRedPos;
@@ -250,6 +258,8 @@ public class Board : MonoBehaviour {
 				}
 			}
 		}
+		invalidAlpha = 1;
+		invalidMoveText.GetComponent<TextMesh>().color = new Color(0f, 0f, 0f, invalidAlpha);
 		moveCompleted = false;
 
 	}
