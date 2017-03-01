@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using UnityEngine;
@@ -38,7 +39,29 @@ public class Server : MonoBehaviour {
 			return;
 		}
 		foreach(ServerClient c in clients){
-			
+			if(!IsConnected(c.tcp)){
+				c.tcp.Close();
+				disconnectList.Add(c);
+				continue;
+			}else{
+				NetworkStream s = c.tcp.GetStream();
+				if(s.DataAvailable){
+					StreamReader reader = new StreamReader(s, true);
+					string data = reader.ReadLine();
+
+					if(data != null){
+						OnIncomingData(c, data);
+					}
+				}
+			}
+		}
+
+		for(int i=0; i < disconnectList.Count -1; i++){
+
+			//tell player someone has been disconnected
+
+			clients.Remove(disconnectList[i]);
+			disconnectList.RemoveAt(i);
 		}
 	}
 
@@ -73,6 +96,25 @@ public class Server : MonoBehaviour {
 		{
 			return false;
 		}
+	}
+
+	private void Broadcast(string data, List<ServerClient> cl){
+		foreach(ServerClient sc in cl){
+			try
+			{
+				StreamWriter writer = new StreamWriter(sc.tcp.GetStream());
+				writer.WriteLine(data);
+				writer.Flush();
+			}
+			catch (Exception e)
+			{
+				Debug.Log("Write error : " + e.Message);
+			}
+		}
+	}
+
+	private void OnIncomingData(ServerClient c, string data){
+		Debug.Log(c.clientName + " : " + data);
 	}
 }
 
