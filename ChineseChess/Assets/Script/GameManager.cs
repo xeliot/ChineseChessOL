@@ -10,7 +10,10 @@ public class GameManager : MonoBehaviour {
 
 	// Use this for initialization
 	private void Start () {
-		DontDestroyOnLoad(gameObject);	
+		Instance = this;
+		serverMenu.SetActive(false);
+		connectMenu.SetActive(false);
+		DontDestroyOnLoad(gameObject);
 	}
 
 	public void ConnectButton(){
