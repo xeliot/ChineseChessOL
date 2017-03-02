@@ -17,16 +17,20 @@ public class GameManager : MonoBehaviour {
 	}
 
 	public void ConnectButton(){
-		Debug.Log("Connect");
+		mainMenu.SetActive(false);
+		connectMenu.SetActive(true);
 	}
 
 	public void HostButton(){
-		Debug.Log("Host");
+		mainMenu.SetActive(false);
+		serverMenu.SetActive(true);
 	}
 	public void ConnectToServerButton(){
 
 	}
 	public void BackButton(){
-
+		mainMenu.SetActive(true);
+		serverMenu.SetActive(false);
+		connectMenu.SetActive(false);
 	}
 }
