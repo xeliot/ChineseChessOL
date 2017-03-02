@@ -4,6 +4,10 @@ public class GameManager : MonoBehaviour {
 
 	public static GameManager Instance{set; get;}
 
+	public GameObject mainMenu;
+	public GameObject serverMenu;
+	public GameObject connectMenu;
+
 	// Use this for initialization
 	private void Start () {
 		DontDestroyOnLoad(gameObject);	
@@ -15,5 +19,11 @@ public class GameManager : MonoBehaviour {
 
 	public void HostButton(){
 		Debug.Log("Host");
+	}
+	public void ConnectToServerButton(){
+
+	}
+	public void BackButton(){
+
 	}
 }
