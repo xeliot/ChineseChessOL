@@ -19,13 +19,13 @@ Platform assembly: C:\Users\Dave Ho\ZetaPhase\ChineseChessOL\ChineseChess\Build_
 Loading C:\Users\Dave Ho\ZetaPhase\ChineseChessOL\ChineseChess\Build_Data\Managed\UnityEngine.PlaymodeTestsRunner.dll into Unity Child Domain
 Platform assembly: C:\Users\Dave Ho\ZetaPhase\ChineseChessOL\ChineseChess\Build_Data\Managed\UnityEngine.Analytics.dll (this message is harmless)
 Loading C:\Users\Dave Ho\ZetaPhase\ChineseChessOL\ChineseChess\Build_Data\Managed\UnityEngine.Analytics.dll into Unity Child Domain
-- Completed reload, in  0.053 seconds
+- Completed reload, in  0.059 seconds
 Platform assembly: C:\Users\Dave Ho\ZetaPhase\ChineseChessOL\ChineseChess\Build_Data\Managed\System.Core.dll (this message is harmless)
 Platform assembly: C:\Users\Dave Ho\ZetaPhase\ChineseChessOL\ChineseChess\Build_Data\Managed\System.dll (this message is harmless)
 desktop: 1366x768 60Hz; virtual: 1366x768 at 0,0
 <RI> Initializing input.
 <RI> Input initialized.
 <RI> Initialized touch support.
-UnloadTime: 1.950534 ms
+UnloadTime: 3.915180 ms
 Setting up 1 worker threads for Enlighten.
-  Thread -> id: 2c10 -> priority: 1 
+  Thread -> id: 43ac -> priority: 1 

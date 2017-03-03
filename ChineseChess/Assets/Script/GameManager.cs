@@ -14,6 +14,8 @@ public class GameManager : MonoBehaviour {
 	public GameObject serverPrefab;
 	public GameObject clientPrefab;
 
+	public InputField name;
+
 	// Use this for initialization
 	private void Start () {
 		Instance = this;
@@ -35,6 +37,10 @@ public class GameManager : MonoBehaviour {
 			s.Init();
 
 			Client c = Instantiate(clientPrefab).GetComponent<Client>();
+			c.clientName = name.text;
+			if(c.clientName == ""){
+				c.clientName = "Host";
+			}
 			c.ConnectToServer("127.0.0.1", 6321);
 		}
 		catch (Exception e)
@@ -61,6 +67,10 @@ public class GameManager : MonoBehaviour {
 		try
 		{
 			Client c = Instantiate(clientPrefab).GetComponent<Client>();
+			c.clientName = name.text;
+			if(c.clientName == ""){
+				c.clientName = "Client";
+			}
 			c.ConnectToServer(hostAddress, 6321);
 			connectMenu.SetActive(false);
 		}
@@ -73,5 +83,15 @@ public class GameManager : MonoBehaviour {
 		serverMenu.SetActive(false);
 		connectMenu.SetActive(false);
 		aboutSection.SetActive(false);
+
+		Server s = FindObjectOfType<Server>();
+		if(s != null){
+			Destroy(s.gameObject);
+		}
+
+		Client c = FindObjectOfType<Client>();
+		if(c != null){
+			Destroy(c.gameObject);
+		}
 	}
 }
