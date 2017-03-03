@@ -9,6 +9,7 @@ public class GameManager : MonoBehaviour {
 	public GameObject mainMenu;
 	public GameObject serverMenu;
 	public GameObject connectMenu;
+	public GameObject aboutSection;
 
 	public GameObject serverPrefab;
 	public GameObject clientPrefab;
@@ -18,6 +19,7 @@ public class GameManager : MonoBehaviour {
 		Instance = this;
 		serverMenu.SetActive(false);
 		connectMenu.SetActive(false);
+		aboutSection.SetActive(false);
 		DontDestroyOnLoad(gameObject);
 	}
 
@@ -25,7 +27,6 @@ public class GameManager : MonoBehaviour {
 		mainMenu.SetActive(false);
 		connectMenu.SetActive(true);
 	}
-
 	public void HostButton(){
 
 		try
@@ -40,6 +41,16 @@ public class GameManager : MonoBehaviour {
 
 		mainMenu.SetActive(false);
 		serverMenu.SetActive(true);
+	}
+	public void AboutButton(){
+		mainMenu.SetActive(false);
+		aboutSection.SetActive(true);
+	}
+	public void DaveGithub(){
+		Application.OpenURL("https://github.com/xeliot");
+	}
+	public void CCOLRepo(){
+		Application.OpenURL("https://github.com/xeliot/ChineseChessOL");
 	}
 	public void ConnectToServerButton(){
 		string hostAddress = GameObject.Find("HostInput").GetComponent<InputField>().text;
@@ -58,5 +69,6 @@ public class GameManager : MonoBehaviour {
 		mainMenu.SetActive(true);
 		serverMenu.SetActive(false);
 		connectMenu.SetActive(false);
+		aboutSection.SetActive(false);
 	}
 }
