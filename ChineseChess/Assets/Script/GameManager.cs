@@ -33,6 +33,9 @@ public class GameManager : MonoBehaviour {
 		{
 			Server s = Instantiate(serverPrefab).GetComponent<Server>();
 			s.Init();
+
+			Client c = Instantiate(clientPrefab).GetComponent<Client>();
+			c.ConnectToServer("127.0.0.1", 6321);
 		}
 		catch (Exception e)
 		{
