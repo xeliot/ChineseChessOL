@@ -5,6 +5,8 @@ using System.Collections.Generic;
 
 public class Board : MonoBehaviour {
 
+	public static Board Instance {set; get;}
+
 	public ChessPiece[,] pieces = new ChessPiece[10,9];
 	//Red gameobjects
 	public GameObject chariotRed;
@@ -46,14 +48,20 @@ public class Board : MonoBehaviour {
 
 	private bool moveCompleted;
 	private bool isRedTurn = true;
+	private bool isRed;
 
 	private Vector2 generalRedPos;
 	private Vector2 generalBluePos;
 	private List<Vector2> redPiecesPos = new List<Vector2>();
 	private List<Vector2> bluePiecesPos = new List<Vector2>();
 
+	private Client client;
+
 	private void Start()
 	{
+		Instance = this;
+		client = FindObjectOfType<Client>();
+		isRed = client.isHost;
 		GenerateBoard();
 		GeneralCheckedText = Instantiate(GeneralCheckedText);
 		GeneralCheckedText.GetComponent<TextMesh>().color = new Color(0f, 0f, 0f, 0f);
@@ -102,10 +110,12 @@ public class Board : MonoBehaviour {
 		}
 		
 		if(Input.GetMouseButtonDown(0)){
-			SelectPiece(x, y);
-			if(selectedPiece != null && selectedPiece.GetRed()==isRedTurn){
-				dragging = true;
-				originalPosition = selectedPiece.transform.position;
+			if(isRed == isRedTurn){
+				SelectPiece(x, y);
+				if(selectedPiece != null && selectedPiece.GetRed()==isRedTurn){
+					dragging = true;
+					originalPosition = selectedPiece.transform.position;
+				}
 			}
 		}
 		
@@ -115,7 +125,14 @@ public class Board : MonoBehaviour {
 				dragging = false;
 				selectedPiece = null;
 				if(moveCompleted){
-					isRedTurn = ! isRedTurn;
+					string msg = "CMOV|";
+					msg += ((int)startDrag.x).ToString() + "|";
+					msg += ((int)startDrag.y).ToString() + "|";
+					msg += x.ToString() + "|";
+					msg += y.ToString();
+
+					client.Send(msg);
+
 					if(isRedTurn){
 						redCurvyArrow.transform.position = new Vector3(-139.9f, 81, 10f);
 						blueCurvyArrow.transform.position = new Vector3(-139.9f, -81f, 300f);
@@ -166,17 +183,21 @@ public class Board : MonoBehaviour {
 		}
 	}
 
-	private void TryMove(int startX, int startY, int endX, int endY)
+	public void TryMove(int startX, int startY, int endX, int endY)
 	{
 		startDrag = new Vector2(startX, startY);
 		endDrag = new Vector2(endX, endY);
 		selectedPiece = pieces[startX, startY];
-		selectedPiece.transform.position = originalPosition;
+		bool invalidMove = false;
+		if(isRed == isRedTurn){
+			selectedPiece.transform.position = originalPosition;
+		}
 		if(endX >= 0 && endX < 10 && endY >= 0 && endY < 9 && selectedPiece != null){
 			if(isValidMove(startX, startY, endX, endY, selectedPiece.Type)){
 				if(!GeneralChecked(isRedTurn)){
 					MovePiece(selectedPiece, endX, endY);
 					moveCompleted = true;
+					isRedTurn = ! isRedTurn;
 					return;
 				}else{
 					ChessPiece[,] copyBoard = (ChessPiece[,]) pieces.Clone();
@@ -253,13 +274,20 @@ public class Board : MonoBehaviour {
 						generalRedPos = originalgeneralRedPos;
 						MovePiece(selectedPiece, endX, endY);
 						moveCompleted = true;
+						isRedTurn = ! isRedTurn;
 						return;
 					}
 				}
+			}else{
+				invalidMove = true;
 			}
+		}else{
+			invalidMove = true;
 		}
-		invalidAlpha = 1;
-		invalidMoveText.GetComponent<TextMesh>().color = new Color(0f, 0f, 0f, invalidAlpha);
+		if(invalidMove){
+			invalidAlpha = 1;
+			invalidMoveText.GetComponent<TextMesh>().color = new Color(0f, 0f, 0f, invalidAlpha);
+		}
 		moveCompleted = false;
 
 	}

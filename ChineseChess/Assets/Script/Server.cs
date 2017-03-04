@@ -71,12 +71,18 @@ public class Server : MonoBehaviour {
 
 	private void AcceptTcpClient(IAsyncResult ar){
 		TcpListener listener = (TcpListener) ar.AsyncState;
+
+		string allUsers = "";
+		foreach(ServerClient i in clients){
+			allUsers += i.clientName + "|";
+		}
+
 		ServerClient sc = new ServerClient(listener.EndAcceptTcpClient(ar));
 		clients.Add(sc);
 
 		StartListening();
 
-		Debug.Log("Somebody has connected!");
+		Broadcast("SWHO|" + allUsers, clients[clients.Count-1]);
 	}
 
 	private bool IsConnected(TcpClient c){
@@ -113,8 +119,27 @@ public class Server : MonoBehaviour {
 		}
 	}
 
+	private void Broadcast(string data, ServerClient c){
+		List<ServerClient> sc = new List<ServerClient> {c};
+		Broadcast(data, sc);
+	}
+
 	private void OnIncomingData(ServerClient c, string data){
-		Debug.Log(c.clientName + " : " + data);
+		Debug.Log("Server:"+data);
+		string[] aData = data.Split('|');
+
+		switch(aData[0])
+		{
+			case "CWHO":
+				c.clientName = aData[1];
+				c.isHost = (aData[2] == "0") ? false : true;
+				Broadcast("SCNN|" + c.clientName, clients);
+				break;
+
+			case "CMOV":
+				Broadcast("SMOV|"+aData[1]+"|"+aData[2]+"|"+aData[3]+"|"+aData[4], clients);
+				break;
+		}
 	}
 }
 
@@ -122,6 +147,7 @@ public class ServerClient
 {
 	public string clientName;
 	public TcpClient tcp;
+	public bool isHost;
 
 	public ServerClient(TcpClient tcp){
 		this.tcp = tcp;
