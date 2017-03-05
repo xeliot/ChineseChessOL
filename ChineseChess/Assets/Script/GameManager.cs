@@ -15,7 +15,7 @@ public class GameManager : MonoBehaviour {
 	public GameObject serverPrefab;
 	public GameObject clientPrefab;
 
-	public InputField name;
+	public InputField nameInput;
 
 	// Use this for initialization
 	private void Start () {
@@ -38,7 +38,7 @@ public class GameManager : MonoBehaviour {
 			s.Init();
 
 			Client c = Instantiate(clientPrefab).GetComponent<Client>();
-			c.clientName = name.text;
+			c.clientName = nameInput.text;
 			c.isHost = true;
 			if(c.clientName == ""){
 				c.clientName = "Host";
@@ -69,7 +69,7 @@ public class GameManager : MonoBehaviour {
 		try
 		{
 			Client c = Instantiate(clientPrefab).GetComponent<Client>();
-			c.clientName = name.text;
+			c.clientName = nameInput.text;
 			if(c.clientName == ""){
 				c.clientName = "Client";
 			}

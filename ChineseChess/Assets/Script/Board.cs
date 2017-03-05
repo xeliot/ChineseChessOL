@@ -42,7 +42,6 @@ public class Board : MonoBehaviour {
 
 	private ChessPiece selectedPiece;
 	private Vector2 startDrag;
-	private Vector2 endDrag;
 	private bool dragging = false;
 	private Vector3 originalPosition;
 
@@ -186,7 +185,6 @@ public class Board : MonoBehaviour {
 	public void TryMove(int startX, int startY, int endX, int endY)
 	{
 		startDrag = new Vector2(startX, startY);
-		endDrag = new Vector2(endX, endY);
 		selectedPiece = pieces[startX, startY];
 		bool invalidMove = false;
 		if(isRed == isRedTurn){
