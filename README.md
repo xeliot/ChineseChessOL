@@ -1,6 +1,7 @@
 # ChineseChessOL
-Local wifi player vs player version of Chinese Chess built with Unity 3D.  
-[Learn more about Chinese Chess / XiangQi](https://en.wikipedia.org/wiki/Xiangqi)
+Online PvP version of Chinese Chess built with Unity 3D.  
+[Learn more about Chinese Chess / XiangQi](https://en.wikipedia.org/wiki/Xiangqi)  
+Blog coming in the future!
 
 <img src="/ChineseChess/Misc/Screenshot2.PNG" width="340">
   
